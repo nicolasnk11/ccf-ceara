@@ -1,0 +1,51 @@
+backend:
+  name: git-gateway
+  branch: main
+
+local_backend: true
+
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+collections:
+  # 1. Coleção de Mestres (A que já fizemos)
+  - name: "mestres"
+    label: "Mestres da Cultura"
+    folder: "src/content/mestres"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Nome do Mestre", name: "title", widget: "string" }
+      - { label: "Área de Atuação", name: "atuacao", widget: "string", hint: "Ex: Bumba Meu Boi" }
+      - { label: "Cidade", name: "cidade", widget: "string" }
+      - { label: "Foto", name: "foto", widget: "image" }
+
+  # 2. Coleção de Publicações
+  - name: "publicacoes"
+    label: "Publicações (Acervo)"
+    folder: "src/content/publicacoes"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Título da Obra", name: "title", widget: "string" }
+      - { label: "Autor / Organizador", name: "autor", widget: "string" }
+      - { label: "Ano", name: "ano", widget: "string" }
+      - { label: "Tipo", name: "tipo", widget: "select", options: ["Livro", "Cordel", "Artigo", "Catálogo", "Outro"] }
+      - { label: "Capa", name: "capa", widget: "image" }
+
+  # 3. Coleção de Eventos
+  - name: "eventos"
+    label: "Agenda de Eventos"
+    folder: "src/content/eventos"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Nome do Evento", name: "title", widget: "string" }
+      - { label: "Dia", name: "dia", widget: "string", hint: "Ex: 15" }
+      - { label: "Mês", name: "mes", widget: "string", hint: "Ex: AGO" }
+      - { label: "Ano", name: "ano", widget: "string", hint: "Ex: 2026" }
+      - { label: "Local", name: "local", widget: "string" }
+      - { label: "Descrição", name: "descricao", widget: "text" }
+      - { label: "Imagem / Banner", name: "imagem", widget: "image" }
+      - { label: "Destacar com a etiqueta 'Imperdível'?", name: "destaque", widget: "boolean", default: false, required: false }
+      - { label: "Este evento já passou? (Move para o Acervo de Realizados)", name: "passado", widget: "boolean", default: false, required: false }

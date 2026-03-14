@@ -1,0 +1,151 @@
+---
+// src/pages/eventos.astro
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+// 1. Importa a função do Astro
+import { getCollection } from 'astro:content';
+
+// 2. Puxa TODOS os eventos cadastrados no painel
+const todosEventos = await getCollection('eventos');
+
+// 3. O Astro filtra automaticamente: se "passado" for falso, é futuro. Se for verdadeiro, é acervo.
+const proximosEventos = todosEventos.filter((evento) => !evento.data.passado);
+const eventosPassados = todosEventos.filter((evento) => evento.data.passado);
+---
+
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Agenda e Acervo de Eventos | CCF</title>
+  </head>
+  <body class="bg-[#FDF8EE] text-[#4A2E15] min-h-screen font-sans flex flex-col relative overflow-x-hidden">
+    
+    <div class="absolute inset-0 pointer-events-none opacity-5 mix-blend-multiply z-0" 
+         style="background-image: url('/textura-danca.jpg'); background-size: 600px; background-repeat: repeat;">
+    </div>
+
+    <div class="relative z-10 flex flex-col min-h-screen">
+      <Header />
+      
+      <main class="flex-grow max-w-6xl mx-auto px-4 py-20 w-full">
+        
+        <div class="mb-20 text-center">
+          <span class="text-[#0B5D3F] font-bold tracking-[0.3em] uppercase text-xs mb-3 block">Programação & Memória</span>
+          <h1 class="text-5xl lg:text-6xl font-bold text-[#4A2E15] mb-6 tracking-tight">Nossos Eventos</h1>
+          <div class="w-24 h-2 bg-[#D4A373] mx-auto"></div>
+          <p class="text-lg text-[#4A2E15]/80 max-w-2xl mx-auto mt-8 font-light">
+            Acompanhe a nossa agenda futura e explore o acervo de encontros, exposições e oficinas que já realizamos.
+          </p>
+        </div>
+
+        <section class="mb-32">
+          <div class="flex items-center gap-6 mb-12">
+            <h2 class="text-3xl font-bold text-[#4A2E15] tracking-tight">Próximos Eventos</h2>
+            <div class="flex-grow h-[2px] bg-[#D4A373]/30"></div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
+            {proximosEventos.map((evento) => (
+              <article class="bg-white border-2 border-[#4A2E15] shadow-[8px_8px_0px_#D4A373] hover:shadow-[12px_12px_0px_#0B5D3F] transition-all duration-300 flex flex-col group hover:-translate-y-1">
+                
+                <div class="w-full h-56 md:h-64 border-b-2 border-[#4A2E15] overflow-hidden relative">
+                  <img src={evento.data.imagem} alt={evento.data.title} class="w-full h-full object-cover grayscale-[10%] sepia-[0.1] contrast-110 group-hover:grayscale-0 group-hover:sepia-0 group-hover:scale-105 transition-all duration-700" />
+                  
+                  {/* Etiqueta condicional de destaque */}
+                  {evento.data.destaque && (
+                    <div class="absolute top-4 right-4 bg-[#0B5D3F] text-white text-xs font-bold uppercase tracking-widest py-1.5 px-3 border-2 border-[#4A2E15] shadow-[4px_4px_0px_#D4A373]">
+                      Imperdível
+                    </div>
+                  )}
+                </div>
+
+                <div class="p-6 md:p-8 flex gap-6">
+                  
+                  <div class="flex flex-col items-center shrink-0">
+                    <div class="bg-[#0B5D3F] border-2 border-[#4A2E15] border-b-0 w-16 py-1 text-center text-white text-[10px] font-bold tracking-widest uppercase">
+                      {evento.data.mes}
+                    </div>
+                    <div class="bg-[#FDF8EE] border-2 border-[#4A2E15] border-b-0 w-16 py-1 text-center text-[#4A2E15] text-2xl font-bold">
+                      {evento.data.dia}
+                    </div>
+                    <div class="bg-[#D4A373] border-2 border-[#4A2E15] w-16 py-1 text-center text-[#4A2E15] text-[10px] font-bold tracking-widest">
+                      {evento.data.ano}
+                    </div>
+                  </div>
+
+                  <div class="flex flex-col justify-center">
+                    <h3 class="text-2xl font-bold text-[#4A2E15] mb-2 leading-tight group-hover:text-[#0B5D3F] transition-colors">{evento.data.title}</h3>
+                    <div class="flex items-center gap-2 text-[#4A2E15]/70 text-sm font-medium mb-3">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                      {evento.data.local}
+                    </div>
+                    <p class="text-[#4A2E15]/80 text-sm leading-relaxed mb-6 font-light">{evento.data.descricao}</p>
+                  </div>
+
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <div class="flex items-center gap-6 mb-12">
+            <h2 class="text-3xl font-bold text-[#4A2E15]/60 tracking-tight">Eventos Realizados</h2>
+            <div class="flex-grow h-[2px] bg-[#D4A373]/30"></div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 opacity-90 hover:opacity-100 transition-opacity">
+            {eventosPassados.map((evento) => (
+              <article class="bg-[#FDF8EE] border-2 border-[#4A2E15]/50 shadow-[8px_8px_0px_rgba(212,163,115,0.5)] hover:shadow-[12px_12px_0px_rgba(11,93,63,0.5)] hover:border-[#4A2E15] transition-all duration-300 flex flex-col group hover:-translate-y-1">
+                
+                <div class="w-full h-56 md:h-64 border-b-2 border-[#4A2E15]/50 overflow-hidden relative group-hover:border-[#4A2E15] transition-colors">
+                  <img src={evento.data.imagem} alt={evento.data.title} class="w-full h-full object-cover grayscale-[40%] sepia-[0.4] contrast-125 group-hover:grayscale-0 group-hover:sepia-0 group-hover:scale-105 transition-all duration-700" />
+                  
+                  <div class="absolute top-4 right-4 bg-[#D4A373] text-[#4A2E15] text-xs font-bold uppercase tracking-widest py-1.5 px-3 border-2 border-[#4A2E15]/50 shadow-[4px_4px_0px_rgba(74,46,21,0.2)]">
+                    Realizado
+                  </div>
+                </div>
+
+                <div class="p-6 md:p-8 flex gap-6">
+                  
+                  <div class="flex flex-col items-center shrink-0 opacity-80 group-hover:opacity-100 transition-opacity">
+                    <div class="bg-[#4A2E15]/10 border-2 border-[#4A2E15]/50 border-b-0 w-16 py-1 text-center text-[#4A2E15] text-[10px] font-bold tracking-widest uppercase">
+                      {evento.data.mes}
+                    </div>
+                    <div class="bg-white border-2 border-[#4A2E15]/50 border-b-0 w-16 py-1 text-center text-[#4A2E15] text-2xl font-bold">
+                      {evento.data.dia}
+                    </div>
+                    <div class="bg-[#4A2E15]/10 border-2 border-[#4A2E15]/50 w-16 py-1 text-center text-[#4A2E15] text-[10px] font-bold tracking-widest">
+                      {evento.data.ano}
+                    </div>
+                  </div>
+
+                  <div class="flex flex-col justify-center">
+                    <h3 class="text-2xl font-bold text-[#4A2E15]/80 mb-2 leading-tight group-hover:text-[#0B5D3F] transition-colors">{evento.data.title}</h3>
+                    <div class="flex items-center gap-2 text-[#4A2E15]/60 text-sm font-medium mb-3">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                      {evento.data.local}
+                    </div>
+                    <p class="text-[#4A2E15]/70 text-sm leading-relaxed mb-6 font-light">{evento.data.descricao}</p>
+                    
+                    <a href="#" class="inline-flex items-center gap-2 text-[#D4A373] font-bold text-sm uppercase tracking-widest hover:text-[#0B5D3F] transition-colors w-max">
+                      <span class="border-b-2 border-[#D4A373] pb-0.5 group-hover:border-[#0B5D3F] transition-colors">Ver Registros</span>
+                      <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </a>
+                  </div>
+
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+      </main>
+
+      <Footer />
+    </div>
+  </body>
+</html>
